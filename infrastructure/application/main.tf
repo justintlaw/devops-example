@@ -1,6 +1,5 @@
 resource "random_id" "random" {
   byte_length = 2
-  count       = var.main_instance_count
 }
 
 resource "aws_key_pair" "main_auth" {

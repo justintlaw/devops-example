@@ -29,7 +29,7 @@
       register: ecr_login_command
     - name: Login To Docker
       docker_login:
-        registry_url: 256343118501.dkr.ecr.us-west-2.amazonaws.com
+        registry_url: "{{ aws_account_id }}.dkr.ecr.us-west-2.amazonaws.com"
         username: AWS
         password: "{{ecr_login_command.stdout}}"
         state: present
@@ -60,22 +60,7 @@
         networks: 
           - name: "{{ network_id }}"
         state: started
-        image: 256343118501.dkr.ecr.us-west-2.amazonaws.com/application_image_repo:latest
+        image: "{{ aws_account_id }}.dkr.ecr.us-west-2.amazonaws.com/application_image_repo:latest"
         pull: true
         ports:
           - "{{ application_port }}:{{ application_port }}"
-    - name: Start Discord Bot Container
-      docker_container:
-        name: bot
-        networks_cli_compatible: yes
-        networks: 
-          - name: "{{ network_id }}"
-        env:
-          BOT_TOKEN: "{{ lookup('aws_ssm', '/discord/assignment-bot-token', region='us-west-2') }}"
-          BOT_CLIENT_ID: "{{ lookup('aws_ssm', '/discord/assignment-bot-client-id', region='us-west-2') }}"
-          NETWORK_GATEWAY: "{{ gateway }}"
-        state: started
-        image: 256343118501.dkr.ecr.us-west-2.amazonaws.com/bot_image_repo:latest
-        pull: true
-        ports:
-          - "{{ bot_port }}:{{ bot_port }}"

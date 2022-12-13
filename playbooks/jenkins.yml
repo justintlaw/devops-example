@@ -1,0 +1,44 @@
+---
+- name: Install Jenkins
+  hosts: main
+  remote_user: ubuntu
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    docker_user: jenkins
+
+  tasks:
+    - name: Install Python
+      include_tasks:
+        file: tasks/install_python.yml
+    - name: Install Required Python Packages
+      ansible.builtin.pip:
+        name:
+          - botocore
+          - boto3
+    - name: Install Terraform
+      include_tasks:
+        file: tasks/install_terraform.yml
+    - name: Install AWS CLI
+      include_tasks:
+        file: tasks/install_aws_cli.yml
+    - name: Install Docker
+      include_tasks:
+        file: tasks/install_docker.yml
+    - name: Install Node
+      include_tasks:
+        file: tasks/install_node.yml
+    - name: Install Jenkins
+      include_tasks:
+        file: tasks/install_jenkins.yml
+    - name: Setup Jenkins
+      include_tasks:
+        file: tasks/setup_jenkins.yml
+    - name: Install JQ
+      ansible.builtin.apt:
+        name: jq
+        state: present
+    - name: Install Ansible
+      ansible.builtin.apt:
+        name: ansible
+        state: present

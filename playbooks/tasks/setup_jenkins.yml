@@ -1,0 +1,17 @@
+---
+- name: Ensure Jenkins is Started and Enabled
+  ansible.builtin.systemd:
+    name: jenkins
+    enabled: yes
+    state: started
+- name: Create Jenkins User directory
+  ansible.builtin.file:
+    path: /home/jenkins/.ssh
+    owner: jenkins
+    mode: '0755'
+    state: directory
+- name: Copy Public Key
+  ansible.builtin.copy:
+    src: ~/.ssh/mtckey.pub # Copy from local machine
+    dest: /home/jenkins/.ssh/devops_key.pub # Destination on remote machine
+    owner: jenkins

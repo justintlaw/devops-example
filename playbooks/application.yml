@@ -1,0 +1,81 @@
+---
+- name: Setup Application Server
+  hosts: main
+  remote_user: ubuntu
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    aws_account_id: "256343118501"
+    docker_user: ubuntu
+    network_id: "default_network"
+    gateway: "172.28.5.254"
+    ip_range: "172.28.5.0/24"
+    subnet: "172.28.0.0/16"
+    application_port: 3000
+    bot_port: 3001
+
+  tasks:
+    - name: Install Python
+      include_tasks:
+        file: tasks/install_python.yml
+    - name: Install AWS CLI
+      include_tasks:
+        file: tasks/install_aws_cli.yml
+    - name: Install Docker
+      include_tasks:
+        file: tasks/install_docker.yml
+    - name: Retrieve ECR Password
+      shell: "aws ecr get-login-password --region us-west-2"
+      register: ecr_login_command
+    - name: Login To Docker
+      docker_login:
+        registry_url: 256343118501.dkr.ecr.us-west-2.amazonaws.com
+        username: AWS
+        password: "{{ecr_login_command.stdout}}"
+        state: present
+    - name: Create Docker Network
+      docker_network:
+        name: "{{ network_id }}"
+        driver: bridge
+        state: present
+        ipam_config:
+          - subnet: "{{ subnet }}"
+            iprange: "{{ ip_range }}"
+            gateway: "{{ gateway }}"
+    - name: Start MongoDB Container
+      docker_container:
+        name: mongodb
+        networks_cli_compatible: yes
+        networks: 
+          - name: "{{ network_id }}"
+        state: started
+        image: mongo
+        pull: true
+        ports:
+          - 27017:27017
+    - name: Start Application Container
+      docker_container:
+        name: application
+        networks_cli_compatible: yes
+        networks: 
+          - name: "{{ network_id }}"
+        state: started
+        image: 256343118501.dkr.ecr.us-west-2.amazonaws.com/application_image_repo:latest
+        pull: true
+        ports:
+          - "{{ application_port }}:{{ application_port }}"
+    - name: Start Discord Bot Container
+      docker_container:
+        name: bot
+        networks_cli_compatible: yes
+        networks: 
+          - name: "{{ network_id }}"
+        env:
+          BOT_TOKEN: "{{ lookup('aws_ssm', '/discord/assignment-bot-token', region='us-west-2') }}"
+          BOT_CLIENT_ID: "{{ lookup('aws_ssm', '/discord/assignment-bot-client-id', region='us-west-2') }}"
+          NETWORK_GATEWAY: "{{ gateway }}"
+        state: started
+        image: 256343118501.dkr.ecr.us-west-2.amazonaws.com/bot_image_repo:latest
+        pull: true
+        ports:
+          - "{{ bot_port }}:{{ bot_port }}"

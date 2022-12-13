@@ -1,0 +1,14 @@
+---
+- name: Install Node Key
+  apt_key:
+    url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+    state: present      
+- name: Add Node Repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64] https://deb.nodesource.com/node_14.x {{ ansible_distribution_release }} main"
+    state: present
+    update_cache: yes
+- name: Install Node
+  ansible.builtin.apt:
+    name: nodejs
+    state: present

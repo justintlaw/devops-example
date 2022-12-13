@@ -29,31 +29,6 @@ resource "aws_iam_instance_profile" "application_profile" {
   role = aws_iam_role.application_role.name
 }
 
-# resource "aws_iam_role_policy" "application_policy" {
-#   name = "application_policy_${random_id.random.dec}"
-#   role = aws_iam_role.application_role.id
-
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action = "s3:ListBucket"
-#         Effect   = "Allow"
-#         Resource = "arn:aws:s3:::terraform-state-ljustint-tutorial" # TODO: Replace "terraform-state-ljustint" with the name of your backend bucket
-#       },
-#       {
-#         Action = [
-#           "s3:GetObject",
-#           "s3:PutObject",
-#           "s3:DeleteObject"
-#         ],
-#         Effect = "Allow",
-#         Resource = "arn:aws:s3:::terraform-state-ljustint-tutorial/*" # TODO: Replace "terraform-state-ljustint" with the name of your backend bucket
-#       }
-#     ]
-#   })
-# }
-
 resource "aws_iam_role" "application_role" {
   name               = "application_role_${random_id.random.dec}"
   path               = "/"

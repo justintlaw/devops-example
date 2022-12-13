@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "terraform-state-ljustint-tutorial"
+    bucket = "terraform-state-ljustint-tutorial" # TODO: YOUR S3 BUCKET NAME HERE
     key    = "devops-example-application"
     region = "us-west-2"
   }

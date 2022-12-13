@@ -19,3 +19,6 @@ crash.log
 
 # Environment files
 *.env
+
+# Ignore aws_hosts since we generate it in jenkins
+aws_hosts

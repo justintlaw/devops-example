@@ -12,7 +12,7 @@ pipeline {
       steps {
         dir('src/api') {
           // Delete test container if it already exists
-          sh 'test $(docker ps -q -f name="assignments") && npm run db:stop'
+          sh 'npm run db:stop 2> /dev/null || true'
 
           // Setup and run tests
           sh 'npm ci'

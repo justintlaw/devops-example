@@ -108,6 +108,8 @@ describe('Application Tests', () => {
 
   describe('GET /api/assignments', () => {
     const days = 5
+    // add small offset so that it will still be past the current date when the api is called
+    const offset = 100000
 
     beforeAll(async () => {
       const [createAssignmentResult1, createAssignmentResult2] = await Promise.all([
@@ -116,14 +118,14 @@ describe('Application Tests', () => {
         .send({
           title: 'Homework 5',
           points: 10,
-          dueDate: new Date().toISOString()
+          dueDate: new Date(Date.now() + offset).toISOString()
         }),
         appRequest
         .post(ASSIGNMENTS_URL)
         .send({
           title: 'Homework 6',
           points: 10,
-          dueDate: new Date().setDate(new Date().getDate() + Number(days + 1))
+          dueDate: new Date().setDate(new Date().getDate() + Number(days + 5))
         })
       ])
 

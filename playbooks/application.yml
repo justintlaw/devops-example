@@ -60,7 +60,7 @@
         networks: 
           - name: "{{ network_id }}"
         state: started
-        image: "{{ aws_account_id }}.dkr.ecr.us-west-2.amazonaws.com/application_image_repo:latest"
+        image: "{{ aws_account_id }}.dkr.ecr.us-west-2.amazonaws.com/application_image:latest"
         pull: true
         ports:
           - "{{ application_port }}:{{ application_port }}"

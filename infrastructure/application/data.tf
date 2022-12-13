@@ -1,8 +1,8 @@
 data "terraform_remote_state" "networking" {
   backend = "s3"
   config = {
-    bucket                  = "terraform-state-ljustint-tutorial" # TODO: YOUR S3 BUCKET HERE
-    key                     = "devops-example-networking"
+    bucket = "terraform-state-ljustint-tutorial" # TODO: YOUR S3 BUCKET HERE
+    key    = "devops-example-networking"
     region = "us-west-2"
   }
 }
@@ -13,7 +13,7 @@ data "terraform_remote_state" "jenkins" {
     bucket = "terraform-state-ljustint-tutorial" # TODO: YOUR S3 BUCKET HERE
     key    = "devops-example-jenkins"
     region = "us-west-2"
-  }  
+  }
 }
 
 data "aws_ami" "server_ami" {

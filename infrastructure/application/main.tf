@@ -8,15 +8,16 @@ resource "aws_key_pair" "main_auth" {
 }
 
 resource "aws_instance" "main" {
-  count                  = var.main_instance_count
-  instance_type          = var.main_instance_type
-  ami                    = data.aws_ami.server_ami.id # key id or name
-  key_name               = aws_key_pair.main_auth.id
+  count                = var.main_instance_count
+  instance_type        = var.main_instance_type
+  ami                  = data.aws_ami.server_ami.id # key id or name
+  key_name             = aws_key_pair.main_auth.id
+  iam_instance_profile = aws_iam_instance_profile.application_profile.id
   vpc_security_group_ids = [
     data.terraform_remote_state.networking.outputs.public_sg_id,
     aws_security_group.application_sg.id
   ]
-  subnet_id              = data.terraform_remote_state.networking.outputs.main_public_subnet_ids[count.index]
+  subnet_id = data.terraform_remote_state.networking.outputs.main_public_subnet_ids[count.index]
 
   root_block_device {
     volume_size = var.main_vol_size
@@ -40,7 +41,7 @@ resource "aws_instance" "main" {
 
 # Repository for application application images
 resource "aws_ecr_repository" "application_image_repo" {
-  name = "application_image_repo_${random_id.random.dec}"
+  name         = "application_image"
   force_delete = true
 
   image_scanning_configuration {

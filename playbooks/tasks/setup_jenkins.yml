@@ -12,6 +12,6 @@
     state: directory
 - name: Copy Public Key
   ansible.builtin.copy:
-    src: ~/.ssh/mtckey.pub # Copy from local machine
+    src: ~/.ssh/devops_key.pub # Copy from local machine
     dest: /home/jenkins/.ssh/devops_key.pub # Destination on remote machine
     owner: jenkins

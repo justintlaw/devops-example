@@ -23,7 +23,7 @@ resource "aws_instance" "main" {
   }
 
   tags = {
-    Name = "application_main_${random_id.random[count.index].dec}"
+    Name = "application_main_${random_id.random.dec}"
   }
 
   # provisioner's are generally discouraged because they aren't part of terraform state

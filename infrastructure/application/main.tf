@@ -1,4 +1,4 @@
-resource "random_id" "main_node_id" {
+resource "random_id" "random" {
   byte_length = 2
   count       = var.main_instance_count
 }
@@ -25,7 +25,7 @@ resource "aws_instance" "main" {
   }
 
   tags = {
-    Name = "application_main_${random_id.main_node_id[count.index].dec}"
+    Name = "application_main_${random_id.random[count.index].dec}"
   }
 
   # provisioner's are generally discouraged because they aren't part of terraform state

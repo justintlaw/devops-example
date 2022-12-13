@@ -12,7 +12,6 @@ resource "aws_instance" "main" {
   instance_type          = var.main_instance_type
   ami                    = data.aws_ami.server_ami.id # key id or name
   key_name               = aws_key_pair.main_auth.id
-  iam_instance_profile   = data.terraform_remote_state.networking.outputs.ec2_instance_profile_id
   vpc_security_group_ids = [
     data.terraform_remote_state.networking.outputs.public_sg_id,
     aws_security_group.application_sg.id
